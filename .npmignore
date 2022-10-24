@@ -1,0 +1,7 @@
+lib/
+node_modules/
+.eslintignore
+.eslintrc.js
+rollup.config.js
+tsconfig.json
+.prettierrc.js
