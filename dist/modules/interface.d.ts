@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import { AxiosResponse } from "axios";
 export interface IToken {
     tenant_access_token?: string;
     app_access_token?: string;
@@ -12,7 +12,7 @@ export interface IGetToken {
     getTenantAccessToken: ({ appId, appSecret }: IFeishuKey) => Promise<IToken>;
     getAppAccessToken: ({ appId, appSecret }: IFeishuKey) => Promise<IToken>;
 }
-interface ISendMessageParams {
+export interface ISendMessageParams {
     receive_id_type: string;
     receive_id: string;
     content: string;
@@ -29,4 +29,10 @@ export interface ISendMessage {
     sendMessage: (params: ISendMessageParams) => Promise<AxiosResponse<any, any>>;
     sendPrivateMessage: (params: ISendPrivateMessageParams) => Promise<any>;
 }
-export {};
+export interface IUploadImgParams {
+    image: string;
+    image_type?: string;
+}
+export interface IManageImg {
+    uploadImg: (params: IUploadImgParams) => Promise<AxiosResponse<any, any>>;
+}

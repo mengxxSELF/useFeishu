@@ -8,10 +8,12 @@
 
   var axios__default = /*#__PURE__*/_interopDefaultLegacy(axios);
 
-  const MessagePath = 'https://open.feishu.cn/open-apis/im/v1/messages';
-  const AppAccessTokenPath = 'https://open.feishu.cn/open-apis/auth/v3/app_access_token/internal';
-  const TenantTokenPath = 'https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal';
-  const PrivateMessagePath = 'https://open.feishu.cn/open-apis/ephemeral/v1/send';
+  const MessagePath = "https://open.feishu.cn/open-apis/im/v1/messages";
+  const AppAccessTokenPath = "https://open.feishu.cn/open-apis/auth/v3/app_access_token/internal";
+  const TenantTokenPath = "https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal";
+  const PrivateMessagePath = "https://open.feishu.cn/open-apis/ephemeral/v1/send";
+  // 图片相关
+  const UploadImgPath = "https://open.feishu.cn/open-apis/im/v1/images";
 
   /**
    * 自建应用获取 tenant_access_token
@@ -57,12 +59,12 @@
   };
 
   /**
-     * 指定用户或者会话发送消息发送消息
-     * https://open.feishu.cn/document/uAjLw4CM/ukTMukTMukTM/reference/im-v1/message/create
-     */
-  const sendMessage = async ({ receive_id_type, receive_id, content, msg_type = 'text', tenant_access_token }) => {
+   * 指定用户或者会话发送消息发送消息
+   * https://open.feishu.cn/document/uAjLw4CM/ukTMukTMukTM/reference/im-v1/message/create
+   */
+  const sendMessage = async ({ receive_id_type, receive_id, content, msg_type = "text", tenant_access_token, }) => {
       return await axios__default["default"](`${MessagePath}?receive_id_type=${receive_id_type}`, {
-          method: 'POST',
+          method: "POST",
           headers: {
               Authorization: `Bearer ${tenant_access_token}`,
           },
@@ -97,6 +99,23 @@
       });
   };
 
+  /**
+   * 上传图片
+   * https://open.feishu.cn/document/uAjLw4CM/ukTMukTMukTM/reference/im-v1/image/create
+   */
+  const uploadImg = async ({ image, image_type = "message", tenant_access_token, }) => {
+      return await axios__default["default"](UploadImgPath, {
+          method: "POST",
+          headers: {
+              Authorization: `Bearer ${tenant_access_token}`,
+          },
+          data: {
+              image_type,
+              image,
+          },
+      });
+  };
+
   class UseFeishu {
       appId;
       appSecret;
@@ -105,8 +124,8 @@
       constructor(appId, appSecret) {
           this.appId = appId;
           this.appSecret = appSecret;
-          this.TenantAccessToken = '';
-          this.AppAccessToken = '';
+          this.TenantAccessToken = "";
+          this.AppAccessToken = "";
       }
       async getTenantAccessToken() {
           const { tenant_access_token, expire } = await getTenantToken({
@@ -124,7 +143,7 @@
           this.AppAccessToken = app_access_token;
           return { app_access_token: this.AppAccessToken, expire };
       }
-      async sendMessage({ receive_id_type, receive_id, content, msg_type }) {
+      async sendMessage({ receive_id_type, receive_id, content, msg_type, }) {
           if (!this.TenantAccessToken) {
               await this.getTenantAccessToken();
           }
@@ -136,7 +155,7 @@
               tenant_access_token: this.TenantAccessToken,
           });
       }
-      async sendPrivateMessage({ chat_id, open_id, user_id, email, card }) {
+      async sendPrivateMessage({ chat_id, open_id, user_id, email, card, }) {
           if (!this.TenantAccessToken) {
               await this.getTenantAccessToken();
           }
@@ -147,6 +166,16 @@
               user_id,
               email,
               card,
+          });
+      }
+      async uploadImg({ image, image_type }) {
+          if (!this.TenantAccessToken) {
+              await this.getTenantAccessToken();
+          }
+          return await uploadImg({
+              tenant_access_token: this.TenantAccessToken,
+              image,
+              image_type,
           });
       }
   }
