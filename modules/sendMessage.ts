@@ -1,20 +1,20 @@
 import axios from "axios";
 import { PrivateMessagePath, MessagePath } from "../config/feishu";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 /**
-   * 指定用户或者会话发送消息发送消息
-   * https://open.feishu.cn/document/uAjLw4CM/ukTMukTMukTM/reference/im-v1/message/create
-   */
- export const sendMessage = async ({
+ * 指定用户或者会话发送消息发送消息
+ * https://open.feishu.cn/document/uAjLw4CM/ukTMukTMukTM/reference/im-v1/message/create
+ */
+export const sendMessage = async ({
   receive_id_type,
   receive_id,
   content,
-  msg_type = 'text',
-  tenant_access_token
+  msg_type = "text",
+  tenant_access_token,
 }: any) => {
   return await axios(`${MessagePath}?receive_id_type=${receive_id_type}`, {
-    method: 'POST',
+    method: "POST",
     headers: {
       Authorization: `Bearer ${tenant_access_token}`,
     },
@@ -24,9 +24,8 @@ import { v4 as uuidv4 } from 'uuid';
       content,
       uuid: uuidv4().slice(0, 50),
     },
-  })
-}
-
+  });
+};
 
 /**
  * 发送仅特定人可见的消息卡片
