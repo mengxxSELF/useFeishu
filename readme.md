@@ -37,3 +37,7 @@ sendMessage
 ## 在群聊中私发消息 - 仅接受人可见
 
 sendPrivateMessage
+
+## 上传图片
+
+uploadImg
